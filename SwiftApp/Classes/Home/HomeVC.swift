@@ -8,9 +8,6 @@
 
 import UIKit
 
-//声明元组类型
-typealias Yuanzu = (headImge: String, name: String, sex:String, infoList: Array<String>, totalPage: Int, intro: String, headerH:CGFloat)
-
 class HomeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource {
     
     // 数据源
@@ -65,6 +62,12 @@ class HomeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDataSour
         self.topIndicator?.color = .red
         self.view.addSubview(self.topIndicator!)
         
+        self.setHomeFlowLayouts()
+        
+    }
+    
+    //MARK: - --- 设置item的布局
+    func setHomeFlowLayouts(){
         //通过layout的一些参数设置item的宽度
         let inset = UIEdgeInsetsMake(10, 10, 10, 10)
         let minLine:CGFloat = 10.0
@@ -94,6 +97,8 @@ class HomeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDataSour
             self.flowLayout.headerH = headInfo.headerH
             print(headInfo)
         }) { (dataArr) in
+            self.topIndicator?.stopAnimating()
+            
             if self.index == 1 {
                 self.dataArr.removeAll()
             }
@@ -136,8 +141,9 @@ class HomeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDataSour
         
         print("{\n第\(indexPath.row)个item\ntitle: \(cell.titleLb.text!)\nabstract: \(model.abstract!)\narticleUrl: https://www.jianshu.com\(model.articleUrl!)\n}")
         
-//        let webVC = WebViewTestVC()
-//        self.navigationController?.pushViewController(webVC, animated: true)
+        let webVC = ArticleVC()
+        webVC.aticleID = model.articleUrl!
+        self.navigationController?.pushViewController(webVC, animated: true)
     }
     
     //MARK: - --- HeaderView  FooterView
@@ -151,6 +157,31 @@ class HomeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDataSour
             self.headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HomeHeadView", for: indexPath) as? HomeHeadView
             reusableView = self.headerView
             self.headerView?.setHearderInfo(self.headInfo!)
+            //点击切换布局
+            self.headerView?.switchBack = { (click) in
+                print(click)
+                self.index = 1
+                self.columnCount = (click == true) ? 1 : 2
+                self.setHomeFlowLayouts()
+                var num = 0
+                for model in self.dataArr {
+                    //计算标题和摘要的高度
+                    model.imgW = Float(self.itemWidth - 16)
+                    model.imgH = model.wrap!.count > 0 ? model.imgW! * 120 / 150 : nil
+                    model.titleH = GETSTRHEIGHT(fontSize: 20, width: CGFloat(model.imgW!) , words: model.title!) + 1
+                    model.abstractH = GETSTRHEIGHT(fontSize: 14, width: CGFloat(model.imgW!) , words: model.abstract!) + 1
+                    
+                    //item高度
+                    var computeH:CGFloat = 8 + 25 + 3 + 10 + 8 + (model.imgH != nil ? CGFloat(model.imgH!) : 0) + 8 + model.titleH! + 8 + model.abstractH! + 8 + 10 + 8
+                    //如果没有图片减去一个间隙8
+                    computeH = computeH - (model.wrap!.count > 0 ? 0 : 8)
+                    model.itemHeight = String(format: "%.f", computeH)
+                    self.dataArr[num] = model;
+                    num += 1
+                }
+                self.flowLayout.findList = self.dataArr
+                self.collectionView?.reloadData()
+            }
             return self.headerView!
         }
         return reusableView!

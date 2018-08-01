@@ -175,6 +175,17 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DsE-gX-aSY">
+                    <rect key="frame" x="8" y="90" width="25" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="t0b-5p-DtC"/>
+                        <constraint firstAttribute="width" constant="25" id="uec-RJ-crr"/>
+                    </constraints>
+                    <state key="normal" title="Button" image="switch"/>
+                    <connections>
+                        <action selector="switchBtClick:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="rFa-VO-V0z"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
@@ -189,9 +200,11 @@
                 <constraint firstItem="1VE-Yq-fKX" firstAttribute="leading" secondItem="69D-wo-APS" secondAttribute="trailing" constant="10" id="Dmc-x4-Kic"/>
                 <constraint firstItem="B3J-wd-3IV" firstAttribute="top" secondItem="iwI-d8-BxS" secondAttribute="top" id="Fjs-25-XTm"/>
                 <constraint firstItem="Rvz-Cf-RZF" firstAttribute="leading" secondItem="sJq-xM-2dl" secondAttribute="leading" id="MAq-Ul-4mK"/>
+                <constraint firstItem="DsE-gX-aSY" firstAttribute="leading" secondItem="VXr-Tz-HHm" secondAttribute="leading" constant="8" id="MYd-05-np8"/>
                 <constraint firstItem="i1s-1R-lKb" firstAttribute="top" secondItem="B3J-wd-3IV" secondAttribute="bottom" constant="2" id="NOF-0P-a7v"/>
                 <constraint firstItem="tNv-8R-UiL" firstAttribute="leading" secondItem="a7s-Fu-e7v" secondAttribute="trailing" constant="15" id="OUP-dt-f4T"/>
                 <constraint firstItem="UDL-DQ-Abp" firstAttribute="top" secondItem="a7s-Fu-e7v" secondAttribute="bottom" constant="5" id="QQx-2K-5gM"/>
+                <constraint firstItem="VXr-Tz-HHm" firstAttribute="bottom" secondItem="DsE-gX-aSY" secondAttribute="bottom" constant="5" id="Scg-hC-NXp"/>
                 <constraint firstItem="kkj-k3-o9G" firstAttribute="leading" secondItem="rSv-Sp-gw7" secondAttribute="leading" id="TLa-z5-hqu"/>
                 <constraint firstItem="Rvz-Cf-RZF" firstAttribute="top" secondItem="sJq-xM-2dl" secondAttribute="bottom" constant="2" id="TZ2-MU-kFN"/>
                 <constraint firstItem="hWt-k9-pjY" firstAttribute="leading" secondItem="B3J-wd-3IV" secondAttribute="trailing" constant="10" id="Z0j-La-Q9M"/>
@@ -241,5 +254,6 @@
     <resources>
         <image name="headImg" width="101" height="100"/>
         <image name="sex_m" width="100" height="100"/>
+        <image name="switch" width="100" height="100"/>
     </resources>
 </document>

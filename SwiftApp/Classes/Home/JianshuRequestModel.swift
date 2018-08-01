@@ -8,6 +8,8 @@
 
 import UIKit
 
+//声明元组类型
+typealias Yuanzu = (headImge: String, name: String, sex:String, infoList: Array<String>, totalPage: Int, intro: String, headerH:CGFloat)
 //头部信息回调，返回一个元组
 typealias HeadBlock = (_ str: Yuanzu) -> Void
 //列表数据
@@ -18,8 +20,10 @@ class JianshuRequestModel: NSObject {
     static func jianshuRequestDataWithPage(_ page:Int, _ itemWith:Float, _ headBlock:HeadBlock, _ dataListBack:DataListBack){
         var dataArr = [JianshuModel]()
         do {
+            //作者ID
+            let authorId = "1b4c832fb2ca"
             //获取HTML源码
-            var str = try String(contentsOf:URL.init(string: "https://www.jianshu.com/u/1b4c832fb2ca?page=" + String(page))!, encoding: .utf8)
+            var str = try String(contentsOf:URL.init(string: "https://www.jianshu.com/u/\(authorId)?page=\(page)")!, encoding: .utf8)
             //print(str)
             
             //剔除换行符和空格
@@ -128,7 +132,7 @@ class JianshuRequestModel: NSObject {
                     time = time.replacingOccurrences(of: "+08:00", with: "")
                     model.time = time
                     
-                    //
+                    //计算标题和摘要的高度
                     model.titleH = GETSTRHEIGHT(fontSize: 20, width: CGFloat(model.imgW!) , words: model.title!) + 1
                     model.abstractH = GETSTRHEIGHT(fontSize: 14, width: CGFloat(model.imgW!) , words: model.abstract!) + 1
                     

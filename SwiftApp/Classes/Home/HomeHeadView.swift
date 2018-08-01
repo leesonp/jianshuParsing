@@ -9,6 +9,8 @@
 import UIKit
 
 class HomeHeadView: UICollectionReusableView {
+    typealias SwitchBtBlock = (_ click: Bool) -> Void
+    
     ///头像
     @IBOutlet weak var headImg: UIImageView!
     ///用户名
@@ -28,6 +30,7 @@ class HomeHeadView: UICollectionReusableView {
     ///个人介绍
     @IBOutlet weak var introduce: UILabel!
     
+    var switchBack: SwitchBtBlock?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -56,6 +59,12 @@ class HomeHeadView: UICollectionReusableView {
         self.number.text = headInfo.infoList[3]
         self.totalLike.text = headInfo.infoList[4]
         self.introduce.text = headInfo.intro
+    }
+    
+    //切换布局按钮
+    @IBAction func switchBtClick(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        self.switchBack!(sender.isSelected)
     }
     
 }
