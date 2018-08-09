@@ -9,11 +9,16 @@
 import UIKit
 
 class HomeFlowLayout: UICollectionViewFlowLayout {
-    var columnCount:Int = 0 // 总列数
-    var findList = [JianshuModel]() // 数据数组
+    // 总列数
+    var columnCount:Int = 0
+    // 数据数组
+    var findList = [JianshuModel]()
+    // 整个webview的高度
     private var maxH:Int?
+    // 头部高度
     var headerH:CGFloat = 100
-    fileprivate var layoutAttributesArray = [UICollectionViewLayoutAttributes]() //所有item的属性
+    //所有item的属性
+    fileprivate var layoutAttributesArray = [UICollectionViewLayoutAttributes]()
     
     override func prepare() {
         let contentWidth:CGFloat = (self.collectionView?.bounds.size.width)! - self.sectionInset.left - self.sectionInset.right
@@ -22,25 +27,23 @@ class HomeFlowLayout: UICollectionViewFlowLayout {
         self.computeAttributesWithItemWidth(CGFloat(itemWidth))
     }
     
-    /**
-     *  根据itemWidth计算布局属性
-     */
+    ///根据itemWidth计算布局属性
     func computeAttributesWithItemWidth(_ itemWidth:CGFloat){
         
-        let headerH = self.headerH
         // 定义一个列高数组 记录每一列的总高度
-        var columnHeight = [Int](repeating: Int(self.sectionInset.top + headerH), count: self.columnCount)
+        var columnHeight = [Int](repeating: Int(self.sectionInset.top + self.headerH), count: self.columnCount)
         // 定义一个记录每一列的总item个数的数组
         var columnItemCount = [Int](repeating: 0, count: self.columnCount)
         var attributesArray = [UICollectionViewLayoutAttributes]()
         
-        
+        // 添加头部属性
         let headerAttr:UICollectionViewLayoutAttributes = UICollectionViewLayoutAttributes.init(forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, with: IndexPath.init(item: 0, section: 0))
-        headerAttr.frame = CGRect(x: 0, y: CGFloat(0), width: self.collectionView!.bounds.size.width, height: headerH)
+        headerAttr.frame = CGRect(x: 0, y: CGFloat(0), width: self.collectionView!.bounds.size.width, height: self.headerH)
         attributesArray.append(headerAttr)
         // 给属性数组设置数值
         self.layoutAttributesArray = attributesArray
         
+        // 遍历数据计算每个item的属性并布局
         var index = 0
         for good in self.findList {
             
@@ -70,7 +73,7 @@ class HomeFlowLayout: UICollectionViewFlowLayout {
         // 根据最高列设置itemSize 使用总高度的平均值
         let itemH = (maxHeight - Int(self.minimumLineSpacing) * (columnItemCount[column!] + 1)) / columnItemCount[column!]
         self.itemSize = CGSize(width: itemWidth, height: CGFloat(itemH))
-        // 添加页脚属性
+        // 添加尾部属性
         let footerIndexPath:IndexPath = IndexPath.init(item: 0, section: 0)
         let footerAttr:UICollectionViewLayoutAttributes = UICollectionViewLayoutAttributes.init(forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, with: footerIndexPath)
         footerAttr.frame = CGRect(x: 0, y: CGFloat(maxHeight), width: self.collectionView!.bounds.size.width, height: 30)
@@ -85,7 +88,7 @@ class HomeFlowLayout: UICollectionViewFlowLayout {
         return self.layoutAttributesArray
     }
     
-    //重写设置contentSize
+    ///重写设置contentSize
     override var collectionViewContentSize: CGSize {
         get {
             return CGSize(width: (collectionView?.bounds.width)!, height: CGFloat(self.maxH!))
@@ -95,5 +98,4 @@ class HomeFlowLayout: UICollectionViewFlowLayout {
         }
     }
 
-    
 }

@@ -186,13 +186,22 @@
                         <action selector="switchBtClick:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="rFa-VO-V0z"/>
                     </connections>
                 </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xoe-oF-3qZ">
+                    <rect key="frame" x="0.0" y="119.5" width="320" height="0.5"/>
+                    <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="0.5" id="7Mu-Mw-Ucq"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="hHg-F6-v0I" firstAttribute="leading" secondItem="tNv-8R-UiL" secondAttribute="trailing" constant="10" id="45x-jR-4AQ"/>
                 <constraint firstItem="sJq-xM-2dl" firstAttribute="leading" secondItem="tNv-8R-UiL" secondAttribute="leading" id="4Kv-PX-IcW"/>
                 <constraint firstItem="kkj-k3-o9G" firstAttribute="top" secondItem="rSv-Sp-gw7" secondAttribute="bottom" constant="2" id="4Uy-Jv-Wex"/>
+                <constraint firstItem="Xoe-oF-3qZ" firstAttribute="leading" secondItem="VXr-Tz-HHm" secondAttribute="leading" id="6Bd-2r-nof"/>
                 <constraint firstItem="HOC-Ir-g9h" firstAttribute="top" secondItem="mRm-rF-O1W" secondAttribute="bottom" constant="2" id="7Lh-K8-8ds"/>
+                <constraint firstItem="Xoe-oF-3qZ" firstAttribute="bottom" secondItem="VXr-Tz-HHm" secondAttribute="bottom" id="7gb-GO-FfX"/>
                 <constraint firstItem="hWt-k9-pjY" firstAttribute="bottom" secondItem="i1s-1R-lKb" secondAttribute="bottom" id="8hI-mi-cba"/>
                 <constraint firstItem="tNv-8R-UiL" firstAttribute="top" secondItem="VXr-Tz-HHm" secondAttribute="top" constant="10" id="8ji-p8-bi6"/>
                 <constraint firstItem="iwI-d8-BxS" firstAttribute="leading" secondItem="mRm-rF-O1W" secondAttribute="trailing" constant="10" id="Cch-Bb-Ymg"/>
@@ -213,6 +222,7 @@
                 <constraint firstItem="a7s-Fu-e7v" firstAttribute="leading" secondItem="VXr-Tz-HHm" secondAttribute="leading" constant="10" id="b7A-LV-7CB"/>
                 <constraint firstItem="hHg-F6-v0I" firstAttribute="centerY" secondItem="tNv-8R-UiL" secondAttribute="centerY" id="c5m-ED-Fpf"/>
                 <constraint firstItem="hWt-k9-pjY" firstAttribute="top" secondItem="B3J-wd-3IV" secondAttribute="top" id="fKh-0W-CNz"/>
+                <constraint firstItem="VXr-Tz-HHm" firstAttribute="trailing" secondItem="Xoe-oF-3qZ" secondAttribute="trailing" id="fTv-J6-V1l"/>
                 <constraint firstItem="1VE-Yq-fKX" firstAttribute="bottom" secondItem="QZJ-2a-gMJ" secondAttribute="bottom" id="g6X-qs-qKZ"/>
                 <constraint firstItem="iwI-d8-BxS" firstAttribute="bottom" secondItem="HOC-Ir-g9h" secondAttribute="bottom" id="gCQ-3o-0mv"/>
                 <constraint firstItem="1VE-Yq-fKX" firstAttribute="top" secondItem="69D-wo-APS" secondAttribute="top" id="hMX-KN-T2L"/>

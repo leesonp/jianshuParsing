@@ -16,6 +16,8 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
     var didScroll = false
     //url
     var urlStr:String?
+    //"App中阅读"显示控制
+    var appWordsHid = false
     
     private var topIndicator: UIActivityIndicatorView?
     
@@ -31,7 +33,6 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         //设置左侧返回键
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "nav_back"), style: .plain, target: self, action: #selector(backToLastVC))
         
@@ -45,6 +46,7 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
         
         //加载“菊花”
         self.topIndicator = UIActivityIndicatorView.init(frame: CGRect(x: (SCREEN_WIDTH - 100) / 2.0, y: (SCREEN_HEIGHT - 100) / 2.0, width: 100, height: 100))
+        self.topIndicator?.activityIndicatorViewStyle = .whiteLarge
         self.topIndicator?.color = .red
         let win = UIApplication.shared.keyWindow
         win!.addSubview(self.topIndicator!)
@@ -58,19 +60,22 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
             self.topIndicator?.stopAnimating()
             self.navigationController?.popViewController(animated: true)
         }
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.webView.configuration.userContentController.add(self, name: "hidViews")
         self.webView.configuration.userContentController.add(self, name: "hidBottomViews")
+        self.webView.configuration.userContentController.add(self, name: "createView")
+        self.webView.configuration.userContentController.add(self, name: "hidOpenInApp")
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(true)
         self.webView.configuration.userContentController.removeScriptMessageHandler(forName: "hidViews")
         self.webView.configuration.userContentController.removeScriptMessageHandler(forName: "hidBottomViews")
+        self.webView.configuration.userContentController.removeScriptMessageHandler(forName: "createView")
+        self.webView.configuration.userContentController.removeScriptMessageHandler(forName: "hidOpenInApp")
     }
 
     override func didReceiveMemoryWarning() {
@@ -78,30 +83,13 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
         // Dispose of any resources that can be recreated.
     }
     
+    //MARK: - --- webview加载完成
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.topIndicator?.stopAnimating()
-        
-        //注入js代码
         //如果不是列表传来的URL不做js注入
         if self.urlStr != "\(self.webView.url!)" {return}
-        
-        let doc =
-        """
-            function hidViews(){
-                //隐藏顶部信息
-                document.getElementsByClassName("header-wrap")[0].style.display = "none";
-                //隐藏打开简书APP按钮
-                document.getElementsByClassName("open-app-btn")[0].style.display = "none";
-                //隐藏底部
-                document.getElementById("footer").style.display = "none";
-                //document.getElementsByClassName("footer-wrap")[0].children[2].style.display = "none";
-                
-                //输出正文内容
-                let mainBody = document.getElementsByClassName("collapse-free-content")[0].outerHTML
-                window.webkit.messageHandlers.hidViews.postMessage(mainBody);
-            };
-            hidViews();
-        """
+        //加载本地js文件，注入js代码
+        let doc = ReadData("InjectionCode", "js")
         print(doc)
         self.webView.evaluateJavaScript(doc, completionHandler: { (htmlStr, error) in
             if error != nil {
@@ -112,7 +100,7 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
         })
     }
     
-    // 从web界面中接收到一个脚本时调用
+    //MARK: - --- 从web界面中接收到一个脚本时调用
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         //print(String(format: "message.name = %@,message.body = %@",message.name,"\(message.body)"))
         
@@ -122,37 +110,73 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
                 self.didScroll = true
             }
         }
+        
+        if message.name == "hidOpenInApp" {
+            self.appWordsHid = true
+            print(message.body)
+        }
     }
     
-    // 在发送请求之前，决定是否跳转
+    //MARK: - --- 弹框
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        let alert = UIAlertController.init(title: "提示", message: message, preferredStyle: .alert)
+        let cancelAction = UIAlertAction.init(title: "知道了", style: .cancel, handler: { (action) in
+            completionHandler()
+        })
+        cancelAction.setValue(UIColor.red, forKey: "titleTextColor")
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true, completion: nil)
+        //alert.view.tintColor = .red
+    }
+    
+    //MARK: - --- 在发送请求之前，决定是否跳转
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         self.topIndicator?.startAnimating()
         let url = navigationAction.request.url?.absoluteString
         print(url!)
-        let urlArr = url!.components(separatedBy: "?")
-        if urlArr[0].hasPrefix("https://www.jianshu.com/p/") {
-            decisionHandler(WKNavigationActionPolicy.allow)
+        let urlArr = url!.components(separatedBy: "&redirect=")
+        
+        if urlArr.count == 2 {
+            let webVC = ArticleVC()
+            webVC.aticleID = urlArr[1]
+            self.navigationController?.pushViewController(webVC, animated: true)
+            decisionHandler(WKNavigationActionPolicy.cancel)
         }else{
-            let urlRegex = "jianshu.com/p/(.*?)+$"
-            let a = JianshuRequestModel.regexGetSub(urlRegex, urlArr[0])
-            if a[0].count > 0 {
-                self.webView.load(URLRequest.init(url: URL.init(string: "https://www.\(a[0])")!))
-                decisionHandler(WKNavigationActionPolicy.allow)
+            if urlArr[0].hasPrefix("https://www.jianshu.com/p/") {
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(5 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC), execute: {
+                    if self.topIndicator?.isAnimating == true{
+                        self.topIndicator?.stopAnimating()
+                        print("请求超时，无法跳转")
+                    }
+                })
+                if urlArr[0] == self.urlStr{
+                    decisionHandler(WKNavigationActionPolicy.allow)
+                }else{
+                    let pushUrlID = urlArr[0].replacingOccurrences(of: "https://www.jianshu.com", with: "")
+                    let webVC = ArticleVC()
+                    webVC.aticleID = pushUrlID
+                    self.navigationController?.pushViewController(webVC, animated: true)
+                    decisionHandler(WKNavigationActionPolicy.cancel)
+                }
+                
             }else{
                 self.topIndicator?.stopAnimating()
                 decisionHandler(WKNavigationActionPolicy.cancel)
             }
         }
+        
+        //let urlRegex = "jianshu.com/p/(.*?)+$"
+        //let a = JianshuRequestModel.regexGetSub(urlRegex, urlArr[0])
     }
     
-    // 在收到响应后，决定是否跳转
+    //MARK: - --- 在收到响应后，决定是否跳转
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         let url = navigationResponse.response.url?.absoluteString
         print(url!)
         decisionHandler(WKNavigationResponsePolicy.allow)
     }
     
-    //监听滑动偏移量
+    //MARK: - --- 监听滑动偏移量
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         //print(scrollView.contentOffset.y)
         
@@ -164,11 +188,39 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
             self.hiddenSomeViewUseJs()
         }
         
+        //隐藏“App中阅读”字样
+        if scrollView.contentOffset.y > 1000 {
+            if self.appWordsHid == true {return}
+            let doc =
+            """
+                function hidOpenInApp(){
+                    var divs = document.getElementsByClassName("meta");
+                    for (var i = 0;i < divs.length; i ++){
+                        var div = divs[i].innerHTML;
+                        //替换字符串“App中阅读”为空字符串，达到隐藏的目的
+                        document.getElementsByClassName("meta")[i].innerHTML = div.replace(/App中阅读/g, "")
+                    }
+                    if (divs.length > 1){
+                        window.webkit.messageHandlers.hidOpenInApp.postMessage(divs.length);
+                    }
+                }
+                hidOpenInApp();
+            """
+            self.webView.evaluateJavaScript(doc, completionHandler: { (htmlStr, error) in
+                if error != nil {
+                    print(error!)
+                }else if (htmlStr != nil){
+                    print(htmlStr!)
+                }
+            })
+        }
+        
     }
     
-    //隐藏HTML的一些标签元素
+    //MARK: - --- 隐藏HTML的一些标签元素
     func hiddenSomeViewUseJs (){
         if self.didScroll == false {
+            //注入js代码
             let doc =
             """
                     function hidBottomViews (){
@@ -186,8 +238,10 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
 
                         //隐藏评论
                         var hid3 = document.getElementById("comment-main");
-                        if(hid3.style.display != "none"){
-                            hid3.style.display = "none";
+                        if(hid3 != null){
+                            if(hid3.style.display != "none"){
+                                hid3.style.display = "none";
+                            }
                         }
                         
                         //隐藏“更多精彩内容”
@@ -198,6 +252,11 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
                             if(hid4.style.display != "none"){
                                 hid4.style.display = "none";
                             }
+                            
+                            //放开以下注释可以隐藏整个“推荐阅读”列表
+                            //if(doc1.style.display != "none"){
+                            //    doc1.style.display = "none";
+                            //}
                         }
                         
                         //隐藏推荐阅读顶部第一个广告

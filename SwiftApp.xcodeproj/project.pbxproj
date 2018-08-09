@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A6248D6B20FC9E1D006A17C1 /* JianshuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6248D6A20FC9E1D006A17C1 /* JianshuModel.swift */; };
+		A6388A702112B45F00F944A2 /* InjectionCode.js in Resources */ = {isa = PBXBuildFile; fileRef = A6388A6F2112B45F00F944A2 /* InjectionCode.js */; };
 		A6399D8A20D3655A00FB3EC6 /* HomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6399D8820D3655A00FB3EC6 /* HomeCell.swift */; };
 		A6399D8B20D3655A00FB3EC6 /* HomeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6399D8920D3655A00FB3EC6 /* HomeCell.xib */; };
 		A63A168720D1FF9700588F5B /* RootTabBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63A168620D1FF9700588F5B /* RootTabBarVC.swift */; };
@@ -65,8 +66,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A621681E210EDDE60025A16F /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = SwiftApp/Alamofire/Alamofire.framework; sourceTree = "<group>"; };
 		A6248D6A20FC9E1D006A17C1 /* JianshuModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JianshuModel.swift; sourceTree = "<group>"; };
+		A6388A6F2112B45F00F944A2 /* InjectionCode.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = InjectionCode.js; sourceTree = "<group>"; };
 		A6399D8820D3655A00FB3EC6 /* HomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCell.swift; sourceTree = "<group>"; };
 		A6399D8920D3655A00FB3EC6 /* HomeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeCell.xib; sourceTree = "<group>"; };
 		A63A168620D1FF9700588F5B /* RootTabBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarVC.swift; sourceTree = "<group>"; };
@@ -170,6 +171,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A6388A6E2112B45F00F944A2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A6388A6F2112B45F00F944A2 /* InjectionCode.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		A63A168820D20C7900588F5B /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,6 +203,7 @@
 				A6248D6A20FC9E1D006A17C1 /* JianshuModel.swift */,
 				A68819BC2101E30700570DB1 /* JianshuRequestModel.swift */,
 				A649DBA3210EE7F400424C45 /* ArticleVC.swift */,
+				A6388A6E2112B45F00F944A2 /* Resources */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -217,7 +227,6 @@
 		A66FE27020F76755000BFB97 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A621681E210EDDE60025A16F /* Alamofire.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -410,6 +419,7 @@
 				A6AAE4FF2100359D007B23E2 /* DIN-Medium.otf in Resources */,
 				A6EEE11121030BD10013F3F7 /* HomeFootView.xib in Resources */,
 				A6AAE5012100359D007B23E2 /* DINPro-Regular.otf in Resources */,
+				A6388A702112B45F00F944A2 /* InjectionCode.js in Resources */,
 				A6AB0CF620D12A9700979083 /* Assets.xcassets in Resources */,
 				A6DAD4BA2108867500213719 /* HomeHeadView.xib in Resources */,
 				A6399D8B20D3655A00FB3EC6 /* HomeCell.xib in Resources */,
@@ -547,7 +557,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -601,7 +611,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -613,15 +623,14 @@
 		A6AB0CFE20D12A9700979083 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = U42Y5TAQQA;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/SwiftApp/Alamofire",
-				);
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = SwiftApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -629,24 +638,24 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.leesonpeng.SwiftApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/SwiftApp/Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		A6AB0CFF20D12A9700979083 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = U42Y5TAQQA;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/SwiftApp/Alamofire",
-				);
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = SwiftApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -654,9 +663,10 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.leesonpeng.SwiftApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/SwiftApp/Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -670,7 +680,7 @@
 				A6AB0CFC20D12A9700979083 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		A6AB0CFD20D12A9700979083 /* Build configuration list for PBXNativeTarget "SwiftApp" */ = {
 			isa = XCConfigurationList;
@@ -679,7 +689,7 @@
 				A6AB0CFF20D12A9700979083 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

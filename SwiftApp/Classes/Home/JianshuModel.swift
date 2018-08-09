@@ -36,6 +36,7 @@ class JianshuModel: NSObject {
     
     ///title高度
     var titleH:CGFloat?
+    ///摘要高度
     var abstractH:CGFloat?
 
 }

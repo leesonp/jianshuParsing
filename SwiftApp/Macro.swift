@@ -52,7 +52,13 @@ func GETSTRHEIGHT(fontSize: CGFloat, width: CGFloat, words: String) -> CGFloat {
     return rect.height //ceil(rect.height)
 }
 
-
+/** 读取项目本地文件数据 */
+func ReadData(_ fileName:String, _ type:String) -> String {
+    let path = Bundle.main.path(forResource: fileName, ofType: type)
+    let url = URL(fileURLWithPath: path!)
+    let data = try! Data(contentsOf: url)
+    return String.init(data: data, encoding: .utf8)!
+}
 
 
 

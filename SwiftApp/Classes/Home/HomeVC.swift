@@ -51,8 +51,9 @@ class HomeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDataSour
         self.collectionView = UICollectionView.init(frame: rect, collectionViewLayout:self.flowLayout)
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-        self.collectionView.backgroundColor = RGB16(value: 0xf5f5f5)
+        self.collectionView.backgroundColor = RGB16(value: 0xffffff)
         self.view.addSubview(self.collectionView)
+        //注册xib
         self.collectionView.register(UINib.init(nibName: "HomeCell", bundle: nil), forCellWithReuseIdentifier: "HomeCell")
         self.collectionView.register(UINib.init(nibName: "HomeFootView", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "HomeFootView")
         self.collectionView.register(UINib.init(nibName: "HomeHeadView", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "HomeHeadView")
@@ -160,9 +161,9 @@ class HomeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDataSour
             //点击切换布局
             self.headerView?.switchBack = { (click) in
                 print(click)
-                self.index = 1
                 self.columnCount = (click == true) ? 1 : 2
                 self.setHomeFlowLayouts()
+                //遍历数组 重新计算高度
                 var num = 0
                 for model in self.dataArr {
                     //计算标题和摘要的高度

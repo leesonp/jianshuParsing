@@ -24,20 +24,21 @@ class JianshuRequestModel: NSObject {
             let authorId = "1b4c832fb2ca"
             //获取HTML源码
             var str = try String(contentsOf:URL.init(string: "https://www.jianshu.com/u/\(authorId)?page=\(page)")!, encoding: .utf8)
-            //print(str)
+            print(str)
             
             //剔除换行符和空格
             str = str.replacingOccurrences(of: "\n", with: "")
             str = str.replacingOccurrences(of: " ", with: "")
             
             if page == 1 {
-                let headTop =  "<divclass=\"main-top\">(.*?)</div><ulclass=\"trigger-menu\""
                 //获取头部div标签数据
+                let headTop =  "<divclass=\"main-top\">(.*?)</div><ulclass=\"trigger-menu\""
                 let topInfo:String = self.extractStr(str, headTop)
-                let headImagRegex = "(?<=aclass=\"avatar\"href=\".{0,200}\"><imgsrc=\")(.*?)(?=\"alt=\".*?\"/></a>)"   //(?<=aclass=\"avatar\"href=\").*(?=\"><imgsrc=\")"  //<aclass=\"avatar\"href=\".*?\"><imgsrc=\"(.*?)\".*?/></a>
                 //获取头像url
+                let headImagRegex = "(?<=aclass=\"avatar\"href=\".{0,200}\"><imgsrc=\")(.*?)(?=\"alt=\".*?\"/></a>)"
                 let headImge = self.extractStr(topInfo, headImagRegex)
                 /*
+                //也可用这个正则表达式获取头像
                 let headImagRegex = "(?<=aclass=\"avatar\"href=\")(.*?)(?=\">)|(?<=imgsrc=\")(.*?)(?=\"alt=\".*?\"/></a>)"
                 let headImagArr = self.regexGetSub(headImagRegex, self.topInfo!)
                 //获取头像url
@@ -51,8 +52,8 @@ class JianshuRequestModel: NSObject {
                 let sexRegex = "(?<=iclass=\"iconfontic-)(.*?)(?=\">.*?</i>)"
                 let sex = self.extractStr(topInfo, sexRegex)
                 
-                let infoListRegex = "(?<=li><divclass=\"meta-block\">.{0,200}<p>)(.*?)(?=</p>.*?</li>)"  //(?<=li><divclass=\"meta-block\"><ahref=\".*?\"><p>)(.*?)(?=</p>.*?</li>)
-                //[关注，粉丝，文章，字数，收获喜欢]
+                //[关注，粉丝，文章，字数，收获喜欢] 。 li标签一般是多个，匹配出来自然是数组
+                let infoListRegex = "(?<=li><divclass=\"meta-block\">.{0,200}<p>)(.*?)(?=</p>.*?</li>)"
                 let infoList = self.regexGetSub(infoListRegex, topInfo)
                 //总页数
                 let articleCount = Int(Double((infoList[2]))!)
@@ -63,8 +64,10 @@ class JianshuRequestModel: NSObject {
                 var intro = self.regexGetSub(introRegex, str)[0]
                 intro = intro.replacingOccurrences(of: "<br>", with: "\n")
                 
+                //头部高度计算
                 let headerH = 10 + 60 + 5 + 12 + 8 + GETSTRHEIGHT(fontSize: 11, width: CGFloat(SCREEN_WIDTH - (10 + 30 + 15 + 10)) , words: intro) + 10 + 1
                 
+                //返回头部信息
                 let headCallBackInfo = (headImge:headImge, name:name, sex:sex, infoList:infoList, totalPage:totalPage, intro:intro, headerH:headerH)
                 headBlock(headCallBackInfo)
             }
@@ -75,8 +78,9 @@ class JianshuRequestModel: NSObject {
             let articleListStrArr = self.regexGetSub(articleListStrRegex, str)
             if articleListStrArr[0] != "" {
                 let articleListStr = articleListStrArr[0]
+                //单条数据正则
                 let liLableRegex = "<liid=(.*?)</li>"
-                //匹配获取li标签个数
+                //匹配获取li标签，得到一个元素不大于9的数组
                 let liLableArr = self.regexGetSub(liLableRegex, articleListStr)
                 //遍历li标签 匹配需要的数据
                 for item in liLableArr {
@@ -100,6 +104,7 @@ class JianshuRequestModel: NSObject {
                     model.imgW = itemWith - 16
                     //如果长度大于0个字符
                     if model.wrap!.count > 0  {
+                        //此步是为了按比例缩放图片，但是发现所有的图片都是 宽 * 120 / 150 ，所以可不写这步直接通过宽计算高即可
                         let temp1 = self.matchingStr(str: model.wrap!)
                         var temp2 = temp1.replacingOccurrences(of: "w/", with: "")
                         temp2 = temp2.replacingOccurrences(of: "/h/", with: " ")
@@ -118,7 +123,7 @@ class JianshuRequestModel: NSObject {
                     //此方法可以只写一个正则表达式，返回一个（两个元素的数组）
                     //                    let redComments = self.regexGetSub(readCommentsRegex, item)
                     //                    let red = redComments[0]    //查看人数
-                    //                    let comments = redComments[1]       //评论
+                    //                    let comments = redComments[1]       //评论人数
                     
                     //查看人数
                     model.read = self.regexGetSub(readRegex, item)[0]
@@ -152,8 +157,6 @@ class JianshuRequestModel: NSObject {
         }
         dataListBack(dataArr)
     }
-    
-    
     
     //MARK: - --- 根据正则表达式提取字符串(获取单条)
     static func extractStr(_ str:String, _ pattern:String) -> String{
@@ -197,9 +200,7 @@ class JianshuRequestModel: NSObject {
     //MARK: - --- 正则匹配类似"w/300/h/240"的字符串
     static func matchingStr(str:String) -> String{
         let regex = "w/\\d+/h/\\d+$"
-        
         let rangeindex = str.range(of: regex, options: .regularExpression, range: str.startIndex..<str.endIndex, locale:Locale.current)
-        
         var value:String?
         if rangeindex != nil {
             value = String(str[rangeindex!])

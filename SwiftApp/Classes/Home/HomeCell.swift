@@ -115,7 +115,6 @@ class HomeCell: UICollectionViewCell {
         self.loveLb.text = self.model?.like
         
     }
-    
 
 }
 
