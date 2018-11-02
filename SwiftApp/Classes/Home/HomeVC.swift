@@ -47,7 +47,7 @@ class HomeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDataSour
     //MARK: - --- 创建UI
     func createUI(){
         self.flowLayout = HomeFlowLayout()
-        let rect: CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 49 - (IsiPhonX ? 34 : 0)))
+        let rect: CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 49 - (IsFullScreen ? 34 : 0)))
         self.collectionView = UICollectionView.init(frame: rect, collectionViewLayout:self.flowLayout)
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
@@ -113,7 +113,7 @@ class HomeVC: UIViewController,UICollectionViewDelegate,UICollectionViewDataSour
             //刷新视图
             self.collectionView?.reloadData()
         }
-       
+        
     }
 
     //MARK: - --- delegate，dataSource

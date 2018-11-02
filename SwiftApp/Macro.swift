@@ -20,6 +20,21 @@ func ViewScale(num: CGFloat) -> CGFloat{
 
 /** 判断是否是iPhoneX */
 let IsiPhonX = UIScreen.instancesRespond(to: #selector(getter: UIScreen.currentMode)) ? __CGSizeEqualToSize(CGSize(width: 1125, height: 2436), UIScreen.main.currentMode!.size) : false
+/** 判断是否是iPhoneXR*/
+let IsiPhonXR = UIScreen.instancesRespond(to: #selector(getter: UIScreen.currentMode)) ? __CGSizeEqualToSize(CGSize(width: 828, height: 1792), UIScreen.main.currentMode!.size) : false
+/** 判断是否是iPhoneXS*/
+let IsiPhonXS = UIScreen.instancesRespond(to: #selector(getter: UIScreen.currentMode)) ? __CGSizeEqualToSize(CGSize(width: 1125, height: 2436), UIScreen.main.currentMode!.size) : false
+/** 判断是否是iPhoneXS_MAX*/
+let IsiPhonXS_MAX = UIScreen.instancesRespond(to: #selector(getter: UIScreen.currentMode)) ? __CGSizeEqualToSize(CGSize(width: 1242, height: 2688), UIScreen.main.currentMode!.size) : false
+/** 是否全面屏*/
+let IsFullScreen = (IsiPhonX || IsiPhonXR || IsiPhonXS || IsiPhonXS_MAX) ? true : false
+/** 状态栏高度*/
+let StatusBarH = IsFullScreen ? 44.0:20.0;
+/** 导航栏高度*/
+let NavBarH = IsFullScreen ? 88.0:64.0;
+/** 标签栏高度*/
+let TabBarH = IsFullScreen ? 83.0:49.0;
+
 
 /** 字体 */
 func Font(font:CGFloat) -> UIFont{

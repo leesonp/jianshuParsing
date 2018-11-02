@@ -35,6 +35,7 @@ class HomeHeadView: UICollectionReusableView {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        self.userName.font = FontWithName("DIN-Medium", 18)
         self.focus.font = FontWithName("DINPro-Regular", 12)
         self.fans.font = self.focus.font;
         self.article.font = self.focus.font;

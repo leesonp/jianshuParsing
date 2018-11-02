@@ -41,11 +41,11 @@ class HomeFlowLayout: UICollectionViewFlowLayout {
         headerAttr.frame = CGRect(x: 0, y: CGFloat(0), width: self.collectionView!.bounds.size.width, height: self.headerH)
         attributesArray.append(headerAttr)
         // 给属性数组设置数值
-        self.layoutAttributesArray = attributesArray
+        //self.layoutAttributesArray = attributesArray
         
         // 遍历数据计算每个item的属性并布局
         var index = 0
-        for good in self.findList {
+        for data in self.findList {
             
             let indexPath = IndexPath.init(item: index, section: 0)
             let attributes = UICollectionViewLayoutAttributes.init(forCellWith: indexPath)
@@ -57,7 +57,7 @@ class HomeFlowLayout: UICollectionViewFlowLayout {
             let itemX = (itemWidth + self.minimumInteritemSpacing) * CGFloat(column!) + self.sectionInset.left
             let itemY = minHeight
             // 等比例缩放 计算item的高度
-            let itemH = Int(Double(good.itemHeight!)!)
+            let itemH = Int(Double(data.itemHeight!)!)
             // 设置frame
             attributes.frame = CGRect(x: itemX, y: CGFloat(itemY), width: itemWidth, height: CGFloat(itemH))
             

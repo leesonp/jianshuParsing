@@ -65,7 +65,7 @@ class JianshuRequestModel: NSObject {
                 intro = intro.replacingOccurrences(of: "<br>", with: "\n")
                 
                 //头部高度计算
-                let headerH = 10 + 60 + 5 + 12 + 8 + GETSTRHEIGHT(fontSize: 11, width: CGFloat(SCREEN_WIDTH - (10 + 30 + 15 + 10)) , words: intro) + 10 + 1
+                let headerH = 10 + 60 + 5 + 12 + 8 + GETSTRHEIGHT(fontSize: 12, width: CGFloat(SCREEN_WIDTH - (10 + 60 + 15 + 10)) , words: intro) + 10 + 1
                 
                 //返回头部信息
                 let headCallBackInfo = (headImge:headImge, name:name, sex:sex, infoList:infoList, totalPage:totalPage, intro:intro, headerH:headerH)

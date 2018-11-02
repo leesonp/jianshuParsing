@@ -27,7 +27,7 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
         preferences.javaScriptCanOpenWindowsAutomatically = true
         preferences.minimumFontSize = 40.0
         configuration.preferences = preferences
-        let webView =  WKWebView.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 49 - (IsiPhonX ? 34 : 0)), configuration:configuration)
+        let webView =  WKWebView.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 49 - (IsFullScreen ? 34 : 0)), configuration:configuration)
         return webView
     }()
 
@@ -143,7 +143,7 @@ class ArticleVC: UIViewController,WKUIDelegate,WKNavigationDelegate,WKScriptMess
             decisionHandler(WKNavigationActionPolicy.cancel)
         }else{
             if urlArr[0].hasPrefix("https://www.jianshu.com/p/") {
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(5 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC), execute: {
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(10 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC), execute: {
                     if self.topIndicator?.isAnimating == true{
                         self.topIndicator?.stopAnimating()
                         print("请求超时，无法跳转")

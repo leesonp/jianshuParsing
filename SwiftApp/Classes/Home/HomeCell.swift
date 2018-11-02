@@ -45,6 +45,7 @@ class HomeCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        self.userName.font = FontWithName("DIN-Medium", 12)
         self.creatTime.font = FontWithName("DINPro-Regular", 10)
         self.readLb.font = FontWithName("DINPro-Regular", 10)
         self.commentsLb.font = self.readLb.font
@@ -68,11 +69,17 @@ class HomeCell: UICollectionViewCell {
         if self.model == nil {return}
         
         var timeStr = self.model!.time!
+        let timeYear = timeStr.prefix(4)
+        let newYear = Tools.dateToStr(dateFormat: "YYYY", date: Date())
         timeStr = timeStr.replacingOccurrences(of: "-", with: ".")
-        let startIndex = timeStr.index(timeStr.startIndex, offsetBy: 5)
-        let endIndex = timeStr.index(timeStr.startIndex, offsetBy: 15)
-        timeStr = String(timeStr[startIndex...endIndex])
-        self.creatTime.text = timeStr  //substring(from: timeStr!.index(timeStr!.startIndex, offsetBy: 3))
+        if Int(timeYear)! == Int(newYear)!  {
+            let startIndex = timeStr.index(timeStr.startIndex, offsetBy: 5)
+            let endIndex = timeStr.index(timeStr.startIndex, offsetBy: 15)
+            timeStr = String(timeStr[startIndex...endIndex])
+            self.creatTime.text = timeStr  //substring(from: timeStr!.index(timeStr!.startIndex, offsetBy: 3))
+        }else{
+            self.creatTime.text = String(timeStr.prefix(16))
+        }
         
         if model.wrap!.count > 0 {
             self.wrapH.constant = CGFloat(self.model!.imgH!)
